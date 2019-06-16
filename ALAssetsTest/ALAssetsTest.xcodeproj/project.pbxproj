@@ -14,6 +14,7 @@
 		63193BEA22B28B4700FD624E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63193BE822B28B4700FD624E /* LaunchScreen.storyboard */; };
 		63193BED22B28B4700FD624E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 63193BEC22B28B4700FD624E /* main.m */; };
 		63193BF722B28B4700FD624E /* ALAssetsTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63193BF622B28B4700FD624E /* ALAssetsTestTests.m */; };
+		635A7D4422B63FF800AA16E4 /* AssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 635A7D4322B63FF800AA16E4 /* AssetsViewController.m */; };
 		63B38E6122B3EAA500318683 /* GroupsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B38E6022B3EAA500318683 /* GroupsCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,8 @@
 		63193BF222B28B4700FD624E /* ALAssetsTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ALAssetsTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63193BF622B28B4700FD624E /* ALAssetsTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ALAssetsTestTests.m; sourceTree = "<group>"; };
 		63193BF822B28B4700FD624E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		635A7D4222B63FF800AA16E4 /* AssetsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssetsViewController.h; sourceTree = "<group>"; };
+		635A7D4322B63FF800AA16E4 /* AssetsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssetsViewController.m; sourceTree = "<group>"; };
 		63B38E5F22B3EAA500318683 /* GroupsCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupsCollectionViewCell.h; sourceTree = "<group>"; };
 		63B38E6022B3EAA500318683 /* GroupsCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupsCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,6 +91,8 @@
 				63193BDE22B28B4600FD624E /* AppDelegate.m */,
 				63193BE022B28B4600FD624E /* GroupsViewController.h */,
 				63193BE122B28B4600FD624E /* GroupsViewController.m */,
+				635A7D4222B63FF800AA16E4 /* AssetsViewController.h */,
+				635A7D4322B63FF800AA16E4 /* AssetsViewController.m */,
 				63B38E5F22B3EAA500318683 /* GroupsCollectionViewCell.h */,
 				63B38E6022B3EAA500318683 /* GroupsCollectionViewCell.m */,
 				63193BE322B28B4600FD624E /* Main.storyboard */,
@@ -211,6 +216,7 @@
 				63B38E6122B3EAA500318683 /* GroupsCollectionViewCell.m in Sources */,
 				63193BE222B28B4600FD624E /* GroupsViewController.m in Sources */,
 				63193BED22B28B4700FD624E /* main.m in Sources */,
+				635A7D4422B63FF800AA16E4 /* AssetsViewController.m in Sources */,
 				63193BDF22B28B4600FD624E /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

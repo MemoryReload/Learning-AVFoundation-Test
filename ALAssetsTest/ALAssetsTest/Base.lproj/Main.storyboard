@@ -89,6 +89,7 @@
                                             <outlet property="groupCountLabel" destination="VV7-tK-H9Q" id="xaN-Na-wff"/>
                                             <outlet property="groupCoverImageView" destination="n8Z-66-oln" id="N63-Hi-ihH"/>
                                             <outlet property="groupNameLabel" destination="tKz-0r-knb" id="O9c-vQ-DxT"/>
+                                            <segue destination="ZHi-K8-NgA" kind="show" identifier="albumSegue" id="zx8-PN-i8E"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -114,6 +115,40 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3728.985507246377" y="-58.258928571428569"/>
+        </scene>
+        <!--Assets View Controller-->
+        <scene sceneID="Kns-Cq-neq">
+            <objects>
+                <collectionViewController id="ZHi-K8-NgA" customClass="AssetsViewController" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="PbJ-Jg-pRk">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wV8-bo-epB">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="AssetCellIdentifier" id="Huf-va-Ci9">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="ZHi-K8-NgA" id="FKR-Fl-9S6"/>
+                            <outlet property="delegate" destination="ZHi-K8-NgA" id="9SE-jy-a7x"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qb3-4i-l9L" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2807" y="-58"/>
         </scene>
     </scenes>
 </document>
