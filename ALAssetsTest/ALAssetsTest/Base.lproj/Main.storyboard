@@ -124,20 +124,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wV8-bo-epB">
-                            <size key="itemSize" width="50" height="50"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="25" minimumInteritemSpacing="10" id="wV8-bo-epB">
+                            <size key="itemSize" width="100" height="100"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="20" minY="20" maxX="20" maxY="20"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="AssetCellIdentifier" id="Huf-va-Ci9">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AssetCellIdentifier" id="Huf-va-Ci9" customClass="AssetsCollectionViewCell">
+                                <rect key="frame" x="20" y="20" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nUQ-rY-sq0">
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                        </imageView>
+                                    </subviews>
                                 </view>
+                                <constraints>
+                                    <constraint firstItem="nUQ-rY-sq0" firstAttribute="centerX" secondItem="Huf-va-Ci9" secondAttribute="centerX" id="FNQ-ob-7vv"/>
+                                    <constraint firstItem="nUQ-rY-sq0" firstAttribute="width" secondItem="Huf-va-Ci9" secondAttribute="width" id="KFg-kU-Rgd"/>
+                                    <constraint firstItem="nUQ-rY-sq0" firstAttribute="centerY" secondItem="Huf-va-Ci9" secondAttribute="centerY" id="Rd9-jT-vRg"/>
+                                    <constraint firstItem="nUQ-rY-sq0" firstAttribute="height" secondItem="Huf-va-Ci9" secondAttribute="height" id="aYU-l1-mxk"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="nUQ-rY-sq0" id="zDj-tG-YQU"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -148,7 +162,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qb3-4i-l9L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2807" y="-58"/>
+            <point key="canvasLocation" x="-2807.2463768115945" y="-58.258928571428569"/>
         </scene>
     </scenes>
 </document>

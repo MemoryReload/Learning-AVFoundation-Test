@@ -7,6 +7,7 @@
 //
 
 #import "AssetsViewController.h"
+#import "AssetsCollectionViewCell.h"
 
 @interface AssetsViewController ()
 @property (nonatomic,strong) NSMutableArray<ALAsset*>* assets;
@@ -34,14 +35,15 @@
         if (result) {
             ALAsset* asset = result;
             NSString* type = [asset valueForProperty:ALAssetPropertyType];
+            NSURL* url = [asset valueForProperty:ALAssetPropertyAssetURL];
             NSString* date = [asset valueForProperty:ALAssetPropertyDate];
             NSArray* UTIs = [asset valueForProperty:ALAssetPropertyRepresentations];
             NSDictionary* URLs = [asset valueForProperty:ALAssetPropertyURLs];
             if ([type isEqualToString:ALAssetTypePhoto]) {
-                NSLog(@"Asset type %@, date %@, UTIs %@, URLs %@",type,date,UTIs,URLs);
+                NSLog(@"Asset type %@, URL:%@, date %@, UTIs %@, URLs %@",type,url,date,UTIs,URLs);
             }else if([type isEqualToString:ALAssetTypeVideo]){
                 NSString* duration = [asset valueForProperty:ALAssetPropertyDuration];
-                NSLog(@"Asset type %@, date %@, duration %@, UTIs %@, URLs %@",type,date,duration,UTIs,URLs);
+                NSLog(@"Asset type %@, URL:%@, date %@, duration %@, UTIs %@, URLs %@",type,url,date,duration,UTIs,URLs);
             }else{
                 NSLog(@"Asset type %@", type);
             }
@@ -59,13 +61,19 @@
 
 static NSString * const reuseIdentifier = @"AssetCellIdentifier";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
-    
+    AssetsCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier forIndexPath:indexPath];
     // Configure the cell
-    cell.backgroundColor = [UIColor blueColor];
+    ALAsset *asset = [self.assets objectAtIndex:indexPath.row];
+    cell.imageView.image = [UIImage imageWithCGImage:asset.thumbnail];
     return cell;
 }
 
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    ALAssetRepresentation* representation =((ALAsset*)[self.assets objectAtIndex:indexPath.row]).defaultRepresentation;
+    NSLog(@"Representaion UTI: %@, dimension: %@, scale: %f, size: %lld, fileName: %@, url: %@, metaData:%@",representation.UTI,NSStringFromCGSize(representation.dimensions), representation.scale, representation.size, representation.filename, representation.url, representation.metadata);
+}
 #pragma mark <UICollectionViewDelegate>
 
 /*

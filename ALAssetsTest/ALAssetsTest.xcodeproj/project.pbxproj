@@ -16,6 +16,7 @@
 		63193BF722B28B4700FD624E /* ALAssetsTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 63193BF622B28B4700FD624E /* ALAssetsTestTests.m */; };
 		635A7D4422B63FF800AA16E4 /* AssetsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 635A7D4322B63FF800AA16E4 /* AssetsViewController.m */; };
 		63B38E6122B3EAA500318683 /* GroupsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B38E6022B3EAA500318683 /* GroupsCollectionViewCell.m */; };
+		63E1264122BFC3EC006A64D5 /* AssetsCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E1264022BFC3EC006A64D5 /* AssetsCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,8 @@
 		635A7D4322B63FF800AA16E4 /* AssetsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssetsViewController.m; sourceTree = "<group>"; };
 		63B38E5F22B3EAA500318683 /* GroupsCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupsCollectionViewCell.h; sourceTree = "<group>"; };
 		63B38E6022B3EAA500318683 /* GroupsCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GroupsCollectionViewCell.m; sourceTree = "<group>"; };
+		63E1263F22BFC3EC006A64D5 /* AssetsCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssetsCollectionViewCell.h; sourceTree = "<group>"; };
+		63E1264022BFC3EC006A64D5 /* AssetsCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssetsCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,8 @@
 				63193BE122B28B4600FD624E /* GroupsViewController.m */,
 				635A7D4222B63FF800AA16E4 /* AssetsViewController.h */,
 				635A7D4322B63FF800AA16E4 /* AssetsViewController.m */,
+				63E1263F22BFC3EC006A64D5 /* AssetsCollectionViewCell.h */,
+				63E1264022BFC3EC006A64D5 /* AssetsCollectionViewCell.m */,
 				63B38E5F22B3EAA500318683 /* GroupsCollectionViewCell.h */,
 				63B38E6022B3EAA500318683 /* GroupsCollectionViewCell.m */,
 				63193BE322B28B4600FD624E /* Main.storyboard */,
@@ -218,6 +223,7 @@
 				63193BED22B28B4700FD624E /* main.m in Sources */,
 				635A7D4422B63FF800AA16E4 /* AssetsViewController.m in Sources */,
 				63193BDF22B28B4600FD624E /* AppDelegate.m in Sources */,
+				63E1264122BFC3EC006A64D5 /* AssetsCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
