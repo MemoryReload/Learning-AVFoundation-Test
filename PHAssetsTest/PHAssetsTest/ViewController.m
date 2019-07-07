@@ -21,7 +21,8 @@
     [self authorizeWithCompletionHandler:^(BOOL authorized) {
         if (authorized) {
             //fucking loading data now
-            [self loadCollections];
+//            [self loadAlbums];
+            [self loadMoments];
         }
         else{
             //give the fucking alert
@@ -57,8 +58,33 @@
     }
 }
 
--(void)loadCollections
+-(void)loadAlbums
 {
+//    PHFetchResult<PHCollection *> * topCollections = [PHCollection fetchTopLevelUserCollectionsWithOptions:nil];
+//    [topCollections enumerateObjectsUsingBlock:^(PHCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//        NSLog(@"Top collecton %lu: %@",(unsigned long)idx, obj );
+//    }];
     
+    PHFetchOptions *fetchOpt = [PHFetchOptions new];
+    fetchOpt.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
+    PHFetchResult<PHAssetCollection*>* userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:fetchOpt];
+    [userAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSLog(@"Collecton %lu: %@, count = %lu",(unsigned long)idx, obj , obj.estimatedAssetCount);
+    }];
+    
+    NSLog(@"------------------------------------------------");
+
+    PHFetchResult<PHAssetCollection*>* smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:fetchOpt];
+    [smartAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSLog(@"Collecton %lu: %@, count = %lu",(unsigned long)idx, obj , obj.estimatedAssetCount);
+    }];
+}
+
+-(void)loadMoments
+{
+    PHFetchResult<PHCollectionList*>* momentLists = [PHCollectionList fetchCollectionListsWithType:PHCollectionListTypeMomentList subtype:PHCollectionListSubtypeMomentListYear options:nil];
+    [momentLists enumerateObjectsUsingBlock:^(PHCollectionList * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSLog(@"Top collecton %lu: %@",(unsigned long)idx, obj );
+    }];
 }
 @end
