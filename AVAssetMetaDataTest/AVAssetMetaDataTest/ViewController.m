@@ -45,16 +45,40 @@
 
 - (void)getMetaDataWithAsset:(AVAsset*)asset
 {
-    [asset loadValuesAsynchronouslyForKeys:@[@"availableMetadataFormats",@"tracks"] completionHandler:^{
+    [asset loadValuesAsynchronouslyForKeys:@[@"availableMetadataFormats",@"tracks",@"naturalSize",@"URL"] completionHandler:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"URL = %@",((AVURLAsset*)asset).URL);
+            if ([asset statusOfValueForKey:@"naturalSize" error:nil] == AVKeyValueStatusLoaded) {
+                NSLog(@"naturalSize = %@", NSStringFromCGSize(asset.naturalSize));
+            }
             if ([asset statusOfValueForKey:@"availableMetadataFormats" error:nil] == AVKeyValueStatusLoaded) {
                 NSLog(@"availableMetadataFormats = %@",asset.availableMetadataFormats);
             }
             if ([asset statusOfValueForKey:@"tracks" error:nil] == AVKeyValueStatusLoaded) {
                 NSLog(@"tracks = %@",asset.tracks);
             }
+            [self printMetadata:asset];
+            [asset.availableMetadataFormats enumerateObjectsUsingBlock:^(AVMetadataFormat  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                [self printMetadata:asset withFormat:obj];
+            }];
             NSLog(@"--------------------------------");
         });
+    }];
+}
+
+- (void)printMetadata:(AVAsset*)asset
+{
+    NSLog(@"===========allMetadata:");
+    [[asset metadata] enumerateObjectsUsingBlock:^(AVMetadataItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSLog(@"%lu. %@",(unsigned long)idx,obj);
+    }];
+}
+
+- (void)printMetadata:(AVAsset*)asset   withFormat:(AVMetadataFormat)format
+{
+    NSLog(@">>>>>>>>>>>>%@:",format);
+    [[asset metadataForFormat:format] enumerateObjectsUsingBlock:^(AVMetadataItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSLog(@"%lu. %@",(unsigned long)idx,obj);
     }];
 }
 @end
