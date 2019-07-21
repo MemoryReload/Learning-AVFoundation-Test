@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		630C241822E43C9200FFEF28 /* AVMetadataItem+MetadataKeyString.m in Sources */ = {isa = PBXBuildFile; fileRef = 630C241722E43C9200FFEF28 /* AVMetadataItem+MetadataKeyString.m */; };
 		6361B2B922DB272400F6AB9B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6361B2B822DB272400F6AB9B /* AppDelegate.m */; };
 		6361B2BC22DB272400F6AB9B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6361B2BB22DB272400F6AB9B /* ViewController.m */; };
 		6361B2BF22DB272400F6AB9B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6361B2BD22DB272400F6AB9B /* Main.storyboard */; };
@@ -30,6 +31,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		630C241622E43C9200FFEF28 /* AVMetadataItem+MetadataKeyString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AVMetadataItem+MetadataKeyString.h"; sourceTree = "<group>"; };
+		630C241722E43C9200FFEF28 /* AVMetadataItem+MetadataKeyString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "AVMetadataItem+MetadataKeyString.m"; sourceTree = "<group>"; };
 		6361B2B422DB272400F6AB9B /* AVAssetMetaDataTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AVAssetMetaDataTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6361B2B722DB272400F6AB9B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6361B2B822DB272400F6AB9B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -94,6 +97,8 @@
 				6361B2B822DB272400F6AB9B /* AppDelegate.m */,
 				6361B2BA22DB272400F6AB9B /* ViewController.h */,
 				6361B2BB22DB272400F6AB9B /* ViewController.m */,
+				630C241622E43C9200FFEF28 /* AVMetadataItem+MetadataKeyString.h */,
+				630C241722E43C9200FFEF28 /* AVMetadataItem+MetadataKeyString.m */,
 				6361B2BD22DB272400F6AB9B /* Main.storyboard */,
 				6361B2C022DB272500F6AB9B /* Assets.xcassets */,
 				6361B2C222DB272600F6AB9B /* LaunchScreen.storyboard */,
@@ -215,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				630C241822E43C9200FFEF28 /* AVMetadataItem+MetadataKeyString.m in Sources */,
 				6361B2BC22DB272400F6AB9B /* ViewController.m in Sources */,
 				6361B2C722DB272600F6AB9B /* main.m in Sources */,
 				6361B2B922DB272400F6AB9B /* AppDelegate.m in Sources */,

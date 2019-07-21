@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "AVMetadataItem+MetadataKeyString.h"
 
 @interface ViewController ()
 @property (nonatomic,strong) NSArray<AVAsset*>* assets;
@@ -20,6 +21,7 @@
     // Do any additional setup after loading the view.
     [self getResources];
     [self getAllResourceMetaData];
+//    NSLog(@"keys: %@, %@, %@", AVMetadataiTunesMetadataKeySongName, AVMetadataiTunesMetadataKeyArtist, AVMetadataiTunesMetadataKeyEncodingTool);
 }
 
 - (void)getResources
@@ -33,6 +35,7 @@
         AVAsset* asset = [AVAsset assetWithURL:url];
         [assets addObject:asset];
     }
+    [assets addObject:[AVAsset assetWithURL:[NSURL URLWithString:@"http://samples.mplayerhq.hu/MPEG-4/CDR-Dinner_LAN_800k.mp4"]]];
     self.assets = [assets copy];
 }
 
@@ -68,9 +71,11 @@
 
 - (void)printMetadata:(AVAsset*)asset
 {
-    NSLog(@"===========allMetadata:");
+    NSError* error;
+    AVKeyValueStatus status = [asset statusOfValueForKey:@"metadata" error:&error];
+    NSLog(@"===========allMetadata: %ld, error: %@", status, error);
     [[asset metadata] enumerateObjectsUsingBlock:^(AVMetadataItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSLog(@"%lu. %@",(unsigned long)idx,obj);
+        NSLog(@"item%lu {%@:%@}",(unsigned long)idx,obj.keyString,obj.value);
     }];
 }
 
@@ -78,7 +83,7 @@
 {
     NSLog(@">>>>>>>>>>>>%@:",format);
     [[asset metadataForFormat:format] enumerateObjectsUsingBlock:^(AVMetadataItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSLog(@"%lu. %@",(unsigned long)idx,obj);
+        NSLog(@"item%lu {%@:%@}",(unsigned long)idx,obj.keyString,obj.value);
     }];
 }
 @end
