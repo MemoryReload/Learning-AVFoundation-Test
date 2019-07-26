@@ -38,9 +38,10 @@
 - (id)init {
     self = [super init];
     if (self) {
-        
         // Listing 3.6
-        
+        _keyMapping = [self buildKeyMapping];
+        _metadata = [[NSMutableDictionary alloc]init];
+        _converterFactory = [[THMetadataConverterFactory alloc]init];
     }
     return self;
 }
@@ -116,14 +117,89 @@
 - (void)addMetadataItem:(AVMetadataItem *)item withKey:(id)key {
 
     // Listing 3.7
+    [_metadata setObject:item forKey:key];
     
+    NSString* mappedKey = [_keyMapping valueForKey:key]?:key;
+    id<THMetadataConverter> converter = [_converterFactory converterForKey:mappedKey];
+    
+    if([mappedKey isEqualToString:THMetadataKeyName]) {
+        _name = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyArtist]){
+        _artist = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyAlbumArtist]){
+        _albumArtist = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyAlbum]){
+        _album = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyArtwork]){
+        _artwork = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyYear]){
+        _year = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyBPM]){
+        _bpm = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyGrouping]){
+        _grouping = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyTrackNumber]){
+        _trackNumber = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyComposer]){
+        _composer = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyDiscNumber]){
+        _discNumber = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyComments]){
+        _comments = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyGenre]){
+        _genre = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyTrackCount]){
+        _trackCount = [converter displayValueFromMetadataItem:item];
+    }else if ([mappedKey isEqualToString:THMetadataKeyDiscCount]){
+        _discCount = [converter displayValueFromMetadataItem:item];
+    }
 }
 
 - (NSArray *)metadataItems {
 
     // Listing 3.16
-    
-    return nil;
+    NSArray* allKeys = [_metadata allKeys];
+    NSMutableArray* items = [[NSMutableArray alloc]initWithCapacity:allKeys.count];
+    for (NSString* key in allKeys) {
+        AVMetadataItem* item = [_metadata valueForKey:key];
+        
+        NSString* mappedKey = [_keyMapping valueForKey:key]?:key;
+        id<THMetadataConverter> converter = [_converterFactory converterForKey:mappedKey];
+        
+        if([mappedKey isEqualToString:THMetadataKeyName]) {
+            item = [converter metadataItemFromDisplayValue:_name withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyArtist]){
+            item = [converter metadataItemFromDisplayValue:_artist withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyAlbumArtist]){
+            item = [converter metadataItemFromDisplayValue:_albumArtist withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyAlbum]){
+            item = [converter metadataItemFromDisplayValue:_album withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyArtwork]){
+            item = [converter metadataItemFromDisplayValue:_artwork withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyYear]){
+            item = [converter metadataItemFromDisplayValue:_year withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyBPM]){
+            item = [converter metadataItemFromDisplayValue:_bpm withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyGrouping]){
+            item = [converter metadataItemFromDisplayValue:_grouping withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyTrackNumber]){
+            item = [converter metadataItemFromDisplayValue:_trackNumber withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyComposer]){
+            item = [converter metadataItemFromDisplayValue:_composer withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyDiscNumber]){
+            item = [converter metadataItemFromDisplayValue:_discNumber withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyComments]){
+            item = [converter metadataItemFromDisplayValue:_comments withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyGenre]){
+            item = [converter metadataItemFromDisplayValue:_genre withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyTrackCount]){
+            item = [converter metadataItemFromDisplayValue:_trackCount withMetadataItem:item];
+        }else if ([mappedKey isEqualToString:THMetadataKeyDiscCount]){
+            item = [converter metadataItemFromDisplayValue:_discCount withMetadataItem:item];
+        }
+        [items addObject:item];
+    }
+    return [items copy];
 }
 
 @end
