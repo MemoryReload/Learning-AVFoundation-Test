@@ -44,6 +44,16 @@
     self = [super init];
     if (self) {
         // Listing 3.3
+        _url = url;
+        _asset = [AVAsset assetWithURL:url];
+        _filename = [_url lastPathComponent];
+        _filetype = [self fileTypeForURL:_url];
+        _editable = ![_filetype isEqualToString:AVFileTypeMPEGLayer3];
+        _acceptedFormats = @[
+                             AVMetadataFormatQuickTimeMetadata,
+                             AVMetadataFormatiTunesMetadata,
+                             AVMetadataFormatID3Metadata
+                             ];
     }
     return self;
 }
@@ -51,14 +61,49 @@
 - (NSString *)fileTypeForURL:(NSURL *)url {
 
     // Listing 3.3
-    
-    return nil;
-    
+    NSString* fileExtension = [url pathExtension];
+    NSString* type = nil;
+    if ([fileExtension isEqualToString:@"mp4"]) {
+        type = AVFileTypeMPEG4;
+    }else if ([fileExtension isEqualToString:@"m4a"]){
+        type = AVFileTypeAppleM4A;
+    }else if ([fileExtension isEqualToString:@"m4v"]){
+        type = AVFileTypeAppleM4V;
+    }else if ([fileExtension isEqualToString:@"mov"]){
+        type = AVFileTypeQuickTimeMovie;
+    }else{
+        type = AVFileTypeMPEGLayer3;
+    }
+    return type;
 }
 
+static NSString * const CommnMatadataKey = @"commonMetadata";
+static NSString * const AvailableMatadataFormatKey = @"availableMetadataFormats";
+
 - (void)prepareWithCompletionHandler:(THCompletionHandler)completionHandler {
-    
     // Listing 3.4
+    if (_prepared) {
+        completionHandler(YES);
+        return;
+    }
+    _metadata = [[THMetadata alloc]init];
+    NSArray*  loadKeys = @[CommnMatadataKey,AvailableMatadataFormatKey];
+    [_asset loadValuesAsynchronouslyForKeys:loadKeys completionHandler:^{
+        AVKeyValueStatus  commonMatadataStatus = [_asset statusOfValueForKey:CommnMatadataKey error:nil];
+        AVKeyValueStatus  availableFormatStatus = [_asset statusOfValueForKey:AvailableMatadataFormatKey error:nil];
+        _prepared = commonMatadataStatus == AVKeyValueStatusLoaded && availableFormatStatus == AVKeyValueStatusLoaded;
+        NSMutableArray<AVMetadataItem*>*  items = [[NSMutableArray alloc]init];
+        [items addObjectsFromArray:_asset.commonMetadata];
+        for (AVMetadataFormat format in _asset.availableMetadataFormats) {
+            if ([self.acceptedFormats containsObject:format]) {
+                [items addObjectsFromArray:[_asset metadataForFormat:format]];
+            }
+        }
+        for (AVMetadataItem* item in items) {
+            [_metadata addMetadataItem:item withKey:item.keyString];
+        }
+        completionHandler(_prepared);
+    }];
 }
 
 - (void)saveWithCompletionHandler:(THCompletionHandler)handler {
