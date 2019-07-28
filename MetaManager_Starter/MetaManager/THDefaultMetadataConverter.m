@@ -30,16 +30,16 @@
 - (id)displayValueFromMetadataItem:(AVMetadataItem *)item {
 
     // Listing 3.10
-    
-    return nil;
+    return item.value;
 }
 
 - (AVMetadataItem *)metadataItemFromDisplayValue:(id)value
                                 withMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.10
-    
-    return nil;
+    AVMutableMetadataItem* mutableItem = [item mutableCopy];
+    mutableItem.value = value;
+    return [mutableItem copy];
 }
 
 @end

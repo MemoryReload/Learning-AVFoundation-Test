@@ -30,16 +30,25 @@
 - (id)displayValueFromMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.12
-    
-    return nil;
+    NSString* comment = nil;
+    if ([item.value isKindOfClass:[NSString class]]) {
+        comment = (NSString*)item.value;
+    }else if ([item.value isKindOfClass:[NSDictionary class]]) {
+        NSDictionary* dict = (NSDictionary*)item.value;
+        if ([dict[@"identifier"] isEqualToString:@""]) {
+            comment = dict[@"text"];
+        }
+    }
+    return comment;
 }
 
 - (AVMetadataItem *)metadataItemFromDisplayValue:(id)value
                                 withMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.12
-    
-    return nil;
+    AVMutableMetadataItem* mutableItem = [item mutableCopy];
+    mutableItem.value = value;
+    return [mutableItem copy];
 }
 
 @end

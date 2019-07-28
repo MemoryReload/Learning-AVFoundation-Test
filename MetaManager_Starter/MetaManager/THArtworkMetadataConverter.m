@@ -30,16 +30,23 @@
 - (id)displayValueFromMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.11
-    
-    return nil;
+    NSImage* image = nil;
+    if ([item.value isKindOfClass:[NSData class]]) {
+        image  = [[NSImage alloc]initWithData:item.dataValue];
+    }else if ([item.value isKindOfClass:[NSDictionary class]]){
+        NSDictionary* dict = (NSDictionary*)item.value;
+        image = [[NSImage alloc]initWithData:dict[@"data"]];
+    }
+    return image;
 }
 
 - (AVMetadataItem *)metadataItemFromDisplayValue:(id)value
                                 withMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.11
-    
-    return nil;
+    AVMutableMetadataItem* mutableItem = [item mutableCopy];
+    mutableItem.value = [(NSImage*)value TIFFRepresentation];
+    return [mutableItem copy];
 }
 
 @end

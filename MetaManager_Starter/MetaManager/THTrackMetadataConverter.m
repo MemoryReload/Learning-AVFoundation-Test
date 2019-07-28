@@ -31,16 +31,48 @@
 - (id)displayValueFromMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.13
-    
-    return nil;
+    NSNumber* number, *count;
+    if ([item.value isKindOfClass:[NSString class]]) {
+        NSArray* components = [(NSString*)item.value componentsSeparatedByString:@"/"];
+        number = @([components[0] integerValue]);
+        count = @([components[1] integerValue]);
+    }else if ([item.value isKindOfClass:[NSData class]]){
+        NSData* data = (NSData*)item.value;
+        if (data.length == 8) {
+            uint16_t *values = (uint16_t *)[data bytes];
+            if (values[1]>0) {
+                number = @(CFSwapInt16(values[1]));
+            }
+            if (values[2]>0) {
+                count = @(CFSwapInt16(values[2]));
+            }
+        }
+    }
+    NSMutableDictionary* dict = [NSMutableDictionary dictionary];
+    [dict setObject:number?:[NSNull null] forKey:THMetadataKeyTrackNumber];
+    [dict setObject:count?:[NSNull null] forKey:THMetadataKeyTrackCount];
+    return [dict copy];
 }
 
 - (AVMetadataItem *)metadataItemFromDisplayValue:(id)value
                                 withMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.13
+    AVMutableMetadataItem* mutableItem = [item mutableCopy];
     
-    return nil;
+    NSNumber* trackNumber = [value objectForKey:THMetadataKeyTrackNumber];
+    NSNumber* trackCount = [value objectForKey:THMetadataKeyTrackCount];
+    
+    uint16_t data[4] = {0};
+    if (trackNumber && ![trackNumber isKindOfClass:[NSNull class]]) {
+        data[1] = CFSwapInt16([trackNumber unsignedShortValue]);
+    }
+    if (trackCount && ![trackCount isKindOfClass:[NSNull class]]) {
+        data[2] = CFSwapInt16([trackCount unsignedShortValue]);
+    }
+    size_t length = sizeof(data);
+    mutableItem.value = [NSData dataWithBytes:data length:length];
+    return [mutableItem copy];
 }
 
 @end
