@@ -41,10 +41,10 @@
         if (data.length == 8) {
             uint16_t *values = (uint16_t *)[data bytes];
             if (values[1]>0) {
-                number = @(CFSwapInt16(values[1]));
+                number = @(CFSwapInt16BigToHost(values[1]));
             }
             if (values[2]>0) {
-                count = @(CFSwapInt16(values[2]));
+                count = @(CFSwapInt16BigToHost(values[2]));
             }
         }
     }
@@ -65,10 +65,10 @@
     
     uint16_t data[4] = {0};
     if (trackNumber && ![trackNumber isKindOfClass:[NSNull class]]) {
-        data[1] = CFSwapInt16([trackNumber unsignedShortValue]);
+        data[1] = CFSwapInt16HostToBig([trackNumber unsignedShortValue]);
     }
     if (trackCount && ![trackCount isKindOfClass:[NSNull class]]) {
-        data[2] = CFSwapInt16([trackCount unsignedShortValue]);
+        data[2] = CFSwapInt16HostToBig([trackCount unsignedShortValue]);
     }
     size_t length = sizeof(data);
     mutableItem.value = [NSData dataWithBytes:data length:length];

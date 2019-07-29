@@ -31,16 +31,44 @@
 - (id)displayValueFromMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.15
-    
-    return nil;
+    THGenre* genre;
+    if ([item.value isKindOfClass:[NSString class]]) {
+        if ([item.keySpace isEqualToString:AVMetadataKeySpaceID3]) {
+            if (item.numberValue) {
+                genre = [THGenre id3GenreWithIndex:[item.numberValue integerValue]];
+            }else{
+                genre = [THGenre id3GenreWithName:(NSString*)item.value];
+            }
+        }else{
+            genre = [THGenre videoGenreWithName:(NSString*)item.value];
+        }
+    }else if ([item.value isKindOfClass:[NSData class]]){
+        NSData* data = (NSData*)item.value;
+        if (data.length ==2) {
+            uint16_t *value = (uint16_t *)[data bytes];
+            genre = [THGenre iTunesGenreWithIndex:CFSwapInt16BigToHost(value[0])];
+        }
+    }
+    return genre;
 }
 
 - (AVMetadataItem *)metadataItemFromDisplayValue:(id)value
                                 withMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.15
-    
-    return nil;
+    THGenre* genre = (THGenre*)value;
+    AVMutableMetadataItem* mutableItem = [item mutableCopy];
+    if ([item.value isKindOfClass:[NSString class]]) {
+        mutableItem.value = genre.name;
+    }else if ([item.value isKindOfClass:[NSData class]]){
+        NSData* data = (NSData*)item.value;
+        if (data.length ==2) {
+            uint16_t index = CFSwapInt16HostToBig(genre.index + 1);;
+            size_t len = sizeof(index);
+            mutableItem.value = [NSData dataWithBytes:&index length:len];
+        }
+    }
+    return [mutableItem copy];
 }
 
 @end

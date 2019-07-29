@@ -102,7 +102,9 @@ static NSString * const AvailableMatadataFormatKey = @"availableMetadataFormats"
         for (AVMetadataItem* item in items) {
             [_metadata addMetadataItem:item withKey:item.keyString];
         }
-        completionHandler(_prepared);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            completionHandler(_prepared);
+        });
     }];
 }
 
