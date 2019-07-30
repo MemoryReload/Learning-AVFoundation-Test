@@ -31,16 +31,50 @@
 - (id)displayValueFromMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.14
-    
-    return nil;
+    NSNumber *discNumber, *discCount;
+    if ([item.value isKindOfClass:[NSString class]]) {
+        NSArray* components = [(NSString*)item.value componentsSeparatedByString:@"/"];
+        discNumber = @([components[0] integerValue]);
+        discCount = @([components[1] integerValue]);
+    }else if ([item.value isKindOfClass:[NSData class]]){
+        NSData* data = (NSData*)item.value;
+        if (data.length == 6) {
+            uint16_t *values = (uint16_t *)[data bytes];
+            if (values[1]>0) {
+                discNumber = @(CFSwapInt16HostToBig(values[1]));
+            }
+            if (values[2]>0) {
+                discCount = @(CFSwapInt16BigToHost(values[2]));
+            }
+        }
+    }
+    NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
+    [mutableDict setObject:discNumber?:[NSNull null] forKey:THMetadataKeyDiscNumber];
+    [mutableDict setObject:discCount?:[NSNull null] forKey:THMetadataKeyDiscCount];
+    return [mutableDict copy];
 }
 
 - (AVMetadataItem *)metadataItemFromDisplayValue:(id)value
                                 withMetadataItem:(AVMetadataItem *)item {
     
     // Listing 3.14
+    uint16_t  values[3] = {0};
     
-    return nil;
+    NSNumber* discNumber = [value objectForKey:THMetadataKeyDiscNumber];
+    NSNumber* discCount = [value objectForKey:THMetadataKeyDiscCount];
+    
+    if (discNumber && ![discNumber isKindOfClass:[NSNull class]]) {
+        values[1] = CFSwapInt16HostToBig([discNumber unsignedShortValue]);
+    }
+    if (discCount && ![discCount isKindOfClass:[NSNull class]]) {
+        values[2] = CFSwapInt16HostToBig([discCount unsignedShortValue]);
+    }
+    
+    size_t len = sizeof(values);
+    NSData* data = [NSData dataWithBytes:values length:len];
+    AVMutableMetadataItem* mutableItem = [item mutableCopy];
+    mutableItem.value = data;
+    return [mutableItem copy];
 }
 
 @end
