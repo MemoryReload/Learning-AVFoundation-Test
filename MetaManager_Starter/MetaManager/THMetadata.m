@@ -51,10 +51,14 @@
     return @{
         // Name Mapping
         AVMetadataCommonKeyTitle : THMetadataKeyName,
+        AVMetadataIdentifierQuickTimeMetadataDisplayName:THMetadataKeyName,
+        @"@nam":THMetadataKeyName,
+        @"com.apple.quicktime.displayname":THMetadataKeyName,
 
         // Artist Mapping
         AVMetadataCommonKeyArtist : THMetadataKeyArtist,
         AVMetadataQuickTimeMetadataKeyProducer : THMetadataKeyArtist,
+        @"@ART":THMetadataKeyArtist,
 
         // Album Artist Mapping
         AVMetadataID3MetadataKeyBand : THMetadataKeyAlbumArtist,
@@ -63,16 +67,20 @@
 
         // Album Mapping
         AVMetadataCommonKeyAlbumName : THMetadataKeyAlbum,
+        AVMetadataQuickTimeMetadataKeyAlbum: THMetadataKeyAlbum,
 
         // Artwork Mapping
         AVMetadataCommonKeyArtwork : THMetadataKeyArtwork,
+        AVMetadataQuickTimeMetadataKeyArtwork:THMetadataKeyArtwork,
+        @"covr":THMetadataKeyArtwork,
 
         // Year Mapping
         AVMetadataCommonKeyCreationDate : THMetadataKeyYear,
         AVMetadataID3MetadataKeyYear : THMetadataKeyYear,
-        @"TYE" : THMetadataKeyYear,
         AVMetadataQuickTimeMetadataKeyYear : THMetadataKeyYear,
         AVMetadataID3MetadataKeyRecordingTime : THMetadataKeyYear,
+        @"TYE" : THMetadataKeyYear,
+        @"@day":THMetadataKeyYear,
 
         // BPM Mapping
         AVMetadataiTunesMetadataKeyBeatsPerMin : THMetadataKeyBPM,
@@ -81,8 +89,8 @@
 
         // Grouping Mapping
         AVMetadataiTunesMetadataKeyGrouping : THMetadataKeyGrouping,
-        @"@grp" : THMetadataKeyGrouping,
         AVMetadataCommonKeySubject : THMetadataKeyGrouping,
+        @"@grp" : THMetadataKeyGrouping,
 
         // Track Number Mapping
         AVMetadataiTunesMetadataKeyTrackNumber : THMetadataKeyTrackNumber,
@@ -100,16 +108,18 @@
         @"TPA" : THMetadataKeyDiscNumber,
 
         // Comments Mapping
-        @"ldes" : THMetadataKeyComments,
+        AVMetadataQuickTimeMetadataKeyDescription:THMetadataKeyComments,
         AVMetadataCommonKeyDescription : THMetadataKeyComments,
         AVMetadataiTunesMetadataKeyUserComment : THMetadataKeyComments,
         AVMetadataID3MetadataKeyComments : THMetadataKeyComments,
         @"COM" : THMetadataKeyComments,
+        @"ldes" : THMetadataKeyComments,
 
         // Genre Mapping
         AVMetadataQuickTimeMetadataKeyGenre : THMetadataKeyGenre,
         AVMetadataiTunesMetadataKeyUserGenre : THMetadataKeyGenre,
-        AVMetadataCommonKeyType : THMetadataKeyGenre
+        AVMetadataCommonKeyType : THMetadataKeyGenre,
+        @"gnre":THMetadataKeyGenre
     };
 }
 
