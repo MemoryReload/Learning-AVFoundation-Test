@@ -111,7 +111,7 @@ static NSString * const AvailableMatadataFormatKey = @"availableMetadataFormats"
 - (void)saveWithCompletionHandler:(THCompletionHandler)handler {
 
     // Listing 3.17
-    
+    AVAssetExportSession* exportSession = [[AVAssetExportSession alloc]initWithAsset:_asset presetName:AVAssetExportPresetPassthrough];
 }
 
 @end
