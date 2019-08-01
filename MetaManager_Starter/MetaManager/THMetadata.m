@@ -54,6 +54,7 @@
         AVMetadataIdentifierQuickTimeMetadataDisplayName:THMetadataKeyName,
         @"@nam":THMetadataKeyName,
         @"com.apple.quicktime.displayname":THMetadataKeyName,
+        @"TIT2":THMetadataKeyName,
 
         // Artist Mapping
         AVMetadataCommonKeyArtist : THMetadataKeyArtist,
@@ -68,6 +69,8 @@
         // Album Mapping
         AVMetadataCommonKeyAlbumName : THMetadataKeyAlbum,
         AVMetadataQuickTimeMetadataKeyAlbum: THMetadataKeyAlbum,
+        @"@alb":THMetadataKeyAlbum,
+        @"TALB":THMetadataKeyAlbum,
 
         // Artwork Mapping
         AVMetadataCommonKeyArtwork : THMetadataKeyArtwork,
