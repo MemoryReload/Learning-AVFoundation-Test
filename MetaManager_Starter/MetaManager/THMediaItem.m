@@ -83,7 +83,7 @@ static NSString * const AvailableMatadataFormatKey = @"availableMetadataFormats"
 - (void)prepareWithCompletionHandler:(THCompletionHandler)completionHandler {
     // Listing 3.4
     if (_prepared) {
-        completionHandler(YES);
+        !completionHandler?:completionHandler(YES);
         return;
     }
     _metadata = [[THMetadata alloc]init];
@@ -103,7 +103,7 @@ static NSString * const AvailableMatadataFormatKey = @"availableMetadataFormats"
             [_metadata addMetadataItem:item withKey:item.keyString];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            completionHandler(_prepared);
+             !completionHandler?:completionHandler(_prepared);
         });
     }];
 }
@@ -111,7 +111,53 @@ static NSString * const AvailableMatadataFormatKey = @"availableMetadataFormats"
 - (void)saveWithCompletionHandler:(THCompletionHandler)handler {
 
     // Listing 3.17
+    
+    //configure the exportSession
+    NSURL* outputURL = [self tempFileUrl];
     AVAssetExportSession* exportSession = [[AVAssetExportSession alloc]initWithAsset:_asset presetName:AVAssetExportPresetPassthrough];
+    exportSession.outputFileType = [self fileTypeForURL:_url];
+    exportSession.outputURL = outputURL;
+    exportSession.metadata = [_metadata metadataItems];
+    //start export
+    __weak AVAssetExportSession* weakSession = exportSession;
+    [exportSession exportAsynchronouslyWithCompletionHandler:^{
+        BOOL completed = NO;
+        if (weakSession.status == AVAssetExportSessionStatusCompleted) {
+            //Do the right thing
+            //move the output file to the source url
+            [self replaceSourceWithFileURL:outputURL];
+            //reload
+            [self reset];
+            completed = YES;
+        }else if (weakSession.status == AVAssetExportSessionStatusFailed){
+            //Let's see the error
+            NSLog(@"Export failed with error: %@",weakSession.error);
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            !handler?:handler(completed);
+        });
+    }];
 }
 
+- (NSURL*)tempFileUrl
+{
+    NSString *tmp = NSTemporaryDirectory();
+    NSString *filePath = [tmp stringByAppendingPathComponent:@"tmp"];
+    filePath = [tmp stringByAppendingPathExtension:[_url pathExtension]];
+    return [NSURL fileURLWithPath:filePath];
+}
+
+- (void)replaceSourceWithFileURL:(NSURL*)targeFileURL
+{
+    NSFileManager* fileManager = [NSFileManager defaultManager];
+    [fileManager removeItemAtURL:_url error:nil];
+    [fileManager copyItemAtURL:targeFileURL toURL:_url error:nil];
+    [fileManager removeItemAtURL:[self tempFileUrl] error:nil];
+}
+
+-(void)reset
+{
+    _prepared = NO;
+    _asset = [AVAsset assetWithURL:_url];
+}
 @end

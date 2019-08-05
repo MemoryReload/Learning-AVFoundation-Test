@@ -38,7 +38,7 @@
 @property (strong) NSArray *musicGenres;
 @property (strong) NSArray *videoGenres;
 @property (weak, readonly) NSArray *activeGenres;
-@property (strong) NSWindowController *exportController;
+//@property (strong) NSWindowController *exportController;
 @end
 
 @implementation THMainWindowController

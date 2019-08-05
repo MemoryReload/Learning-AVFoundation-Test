@@ -156,7 +156,8 @@
     AVMetadataItem* item = self.metadata[numberKey];
     AVMutableMetadataItem* mutableItem = [item mutableCopy];
     mutableItem.value = [converter metadataItemFromDisplayValue:value withMetadataItem:item];
-    [items addObject:[mutableItem copy]];
+//    NSAssert(mutableItem != nil, @"catcha!");
+    if (mutableItem) [items addObject:[mutableItem copy]];
 }
 
 - (NSArray *)metadataItems {
@@ -180,5 +181,4 @@
     }
     return [items copy];
 }
-
 @end

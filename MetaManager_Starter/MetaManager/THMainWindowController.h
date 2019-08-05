@@ -46,7 +46,7 @@
 @property (weak) IBOutlet NSTextField *discCountField;
 @property (weak) IBOutlet NSTextField *bpmField;
 @property (weak) IBOutlet NSImageView *imageWell;
-@property (weak) IBOutlet NSButton *compilationCheckbox;
+//@property (weak) IBOutlet NSButton *compilationCheckbox;
 @property (weak) IBOutlet NSButton *saveButton;
 
 @property (weak) THMediaItem *mediaItem;

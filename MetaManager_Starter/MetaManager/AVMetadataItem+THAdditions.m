@@ -29,7 +29,10 @@
 
 - (NSString *)keyString {
     if ([self.key isKindOfClass:[NSString class]]) {                        // 1
-        return (NSString *)self.key;
+        if ([(NSString *)self.key length]) {
+            return (NSString *)self.key;
+        }
+        return self.commonKey;
     }
     else if ([self.key isKindOfClass:[NSNumber class]]) {
 

@@ -74,6 +74,7 @@
     NSData* data = [NSData dataWithBytes:values length:len];
     AVMutableMetadataItem* mutableItem = [item mutableCopy];
     mutableItem.value = data;
+//    NSAssert(mutableItem != nil, @"catcha in Disc Converter!");
     return [mutableItem copy];
 }
 

@@ -72,6 +72,7 @@
     }
     size_t length = sizeof(data);
     mutableItem.value = [NSData dataWithBytes:data length:length];
+//    NSAssert(mutableItem != nil, @"catcha in Track Converter!");
     return [mutableItem copy];
 }
 
