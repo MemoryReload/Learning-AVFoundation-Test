@@ -39,7 +39,7 @@
 @property (strong) NSImage *artwork;
 @property (strong) THGenre *genre;
 
-@property NSString *year;
+@property NSNumber *year;
 @property NSNumber *bpm;
 @property NSNumber *trackNumber;
 @property NSNumber *trackCount;

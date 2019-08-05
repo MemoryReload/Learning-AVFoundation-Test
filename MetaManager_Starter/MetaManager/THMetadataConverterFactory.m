@@ -29,6 +29,7 @@
 #import "THDiscMetadataConverter.h"
 #import "THGenreMetadataConverter.h"
 #import "THTrackMetadataConverter.h"
+#import "THYearMetadataConverter.h"
 #import "THMetadataKeys.h"
 
 @implementation THMetadataConverterFactory
@@ -51,6 +52,9 @@
     }
     else if ([key isEqualToString:THMetadataKeyGenre]) {
         converter = [[THGenreMetadataConverter alloc] init];
+    }
+    else if ([key isEqualToString:THMetadataKeyYear]){
+        converter = [[THYearMetadataConverter alloc]init];
     }
     else {
         converter = [[THDefaultMetadataConverter alloc] init];

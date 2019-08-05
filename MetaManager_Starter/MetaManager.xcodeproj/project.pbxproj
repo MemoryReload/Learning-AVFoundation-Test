@@ -20,6 +20,7 @@
 		0767FA93179DBF1E00E5F0C7 /* THMediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 0767FA92179DBF1E00E5F0C7 /* THMediaItem.m */; };
 		07A8BCB2179F08910066EA84 /* AVMetadataItem+THAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 07A8BCB1179F08910066EA84 /* AVMetadataItem+THAdditions.m */; };
 		07EE966E17A9ADE100B01434 /* NSFileManager+DirectoryLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = 07EE966D17A9ADE100B01434 /* NSFileManager+DirectoryLocations.m */; };
+		6325636322F7D0B20097761E /* THYearMetadataConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6325636222F7D0B20097761E /* THYearMetadataConverter.m */; };
 		C410FE6817A102A80097FCDD /* THMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = C410FE6717A102A80097FCDD /* THMetadata.m */; };
 		C42ADB8117A7564F004A6910 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = C42ADB8017A7564F004A6910 /* AppIcon.icns */; };
 		C435528717A9DBA10073D415 /* Media in Resources */ = {isa = PBXBuildFile; fileRef = C435528617A9DBA10073D415 /* Media */; };
@@ -61,6 +62,8 @@
 		07A8BCB1179F08910066EA84 /* AVMetadataItem+THAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AVMetadataItem+THAdditions.m"; sourceTree = "<group>"; };
 		07EE966C17A9ADE100B01434 /* NSFileManager+DirectoryLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+DirectoryLocations.h"; sourceTree = "<group>"; };
 		07EE966D17A9ADE100B01434 /* NSFileManager+DirectoryLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+DirectoryLocations.m"; sourceTree = "<group>"; };
+		6325636122F7D0B20097761E /* THYearMetadataConverter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = THYearMetadataConverter.h; sourceTree = "<group>"; };
+		6325636222F7D0B20097761E /* THYearMetadataConverter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = THYearMetadataConverter.m; sourceTree = "<group>"; };
 		C410FE6617A102A80097FCDD /* THMetadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THMetadata.h; sourceTree = "<group>"; };
 		C410FE6717A102A80097FCDD /* THMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THMetadata.m; sourceTree = "<group>"; };
 		C42ADB8017A7564F004A6910 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
@@ -215,6 +218,8 @@
 				C436E39117B9FD79006C8400 /* THDiscMetadataConverter.m */,
 				C436E39617B9FF8B006C8400 /* THGenreMetadataConverter.h */,
 				C436E39717B9FF8B006C8400 /* THGenreMetadataConverter.m */,
+				6325636122F7D0B20097761E /* THYearMetadataConverter.h */,
+				6325636222F7D0B20097761E /* THYearMetadataConverter.m */,
 			);
 			name = Converters;
 			sourceTree = "<group>";
@@ -254,6 +259,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 074654C21799F01B00BAB698;
@@ -298,6 +304,7 @@
 				074654E21799F01B00BAB698 /* THAppDelegate.m in Sources */,
 				C410FE6817A102A80097FCDD /* THMetadata.m in Sources */,
 				C436E39217B9FD79006C8400 /* THDiscMetadataConverter.m in Sources */,
+				6325636322F7D0B20097761E /* THYearMetadataConverter.m in Sources */,
 				C436E39517B9FEB7006C8400 /* THCommentMetadataConverter.m in Sources */,
 				C436E38917B9F432006C8400 /* THDefaultMetadataConverter.m in Sources */,
 				0715EE3117A2D4AC00FCBA70 /* THGenre.m in Sources */,

@@ -154,10 +154,9 @@
                             countKey:count?:[NSNull null]
                             };
     AVMetadataItem* item = self.metadata[numberKey];
-    AVMutableMetadataItem* mutableItem = [item mutableCopy];
-    mutableItem.value = [converter metadataItemFromDisplayValue:value withMetadataItem:item];
+    item = [converter metadataItemFromDisplayValue:value withMetadataItem:item];
 //    NSAssert(mutableItem != nil, @"catcha!");
-    if (mutableItem) [items addObject:[mutableItem copy]];
+    if (item) [items addObject:item];
 }
 
 - (NSArray *)metadataItems {
