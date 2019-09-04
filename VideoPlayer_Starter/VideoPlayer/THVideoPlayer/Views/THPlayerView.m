@@ -42,7 +42,8 @@
         AVPlayerLayer* playerLayer = (AVPlayerLayer*)self.layer;
         [playerLayer setPlayer:player];
         
-        _overlayView = [[THOverlayView alloc]initWithFrame:self.bounds];
+        _overlayView = [[[NSBundle mainBundle] loadNibNamed:@"THOverlayView" owner:[THOverlayView class] options:nil] firstObject];
+        _overlayView.frame = self.bounds;
         _overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_overlayView];
     }

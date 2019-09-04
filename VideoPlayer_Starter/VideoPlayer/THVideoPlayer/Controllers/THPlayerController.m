@@ -64,12 +64,13 @@ static const NSString *PlayerItemStatusContext;
     if (self) {
         
         // Listing 4.6
-        _playState = NO;
+        _playState = YES;
         
         _asset = [AVAsset assetWithURL:assetURL];
         _playerItem = [[AVPlayerItem alloc]initWithAsset:_asset automaticallyLoadedAssetKeys:@[@"commonMetadata",@"duration"]];
         _player = [[AVPlayer alloc]initWithPlayerItem:_playerItem];
         _playerView = [[THPlayerView alloc]initWithPlayer:_player];
+        _playerView.transport.delegate = self;
         [self prepareToPlay];
     }
     return self;
@@ -95,7 +96,8 @@ static const NSString *PlayerItemStatusContext;
         if (status == AVPlayerItemStatusReadyToPlay) {
             if (_playState) {
                 [_playerView.transport setTitle:_asset.title];
-                 [_player play];
+                [_playerView.transport setCurrentTime:CMTimeGetSeconds(_player.currentTime) duration:CMTimeGetSeconds(_playerItem.duration)];
+                [_player play];
             }
         }else{
             NSLog(@"AVPlayerItem: play failed!");
@@ -108,7 +110,10 @@ static const NSString *PlayerItemStatusContext;
 - (void)addPlayerItemTimeObserver {
 
     // Listing 4.8
-    
+    typeof(self) __weak wSelf = self;
+    [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        [wSelf.playerView.transport setCurrentTime:CMTimeGetSeconds(wSelf.player.currentTime) duration:CMTimeGetSeconds(wSelf.playerItem.duration)];
+    }];
 }
 
 - (void)addItemEndObserverForPlayerItem {
