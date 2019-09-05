@@ -49,4 +49,5 @@
  */
 - (UIImageView *)toImageView;
 
+- (UIViewController*)viewController;
 @end

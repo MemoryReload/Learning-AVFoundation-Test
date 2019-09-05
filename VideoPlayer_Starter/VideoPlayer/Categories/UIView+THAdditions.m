@@ -144,5 +144,4 @@
     imageView.frame = CGRectMake(self.frameX, self.frameY, size.width, size.height);
     return imageView;
 }
-
 @end

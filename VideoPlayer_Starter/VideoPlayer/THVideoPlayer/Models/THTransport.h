@@ -31,6 +31,7 @@
 - (void)pause;
 - (void)stop;
 
+
 - (void)scrubbingDidStart;
 - (void)scrubbedToTime:(NSTimeInterval)time;
 - (void)scrubbingDidEnd;

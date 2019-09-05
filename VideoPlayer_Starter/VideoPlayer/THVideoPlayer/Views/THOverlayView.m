@@ -61,9 +61,10 @@
     [self calculateInfoViewOffset];
 
     // Set up actions
-    [self.scrubberSlider addTarget:self action:@selector(showPopupUI) forControlEvents:UIControlEventValueChanged];
-    [self.scrubberSlider addTarget:self action:@selector(hidePopupUI) forControlEvents:UIControlEventTouchUpInside];
     [self.scrubberSlider addTarget:self action:@selector(unhidePopupUI) forControlEvents:UIControlEventTouchDown];
+    [self.scrubberSlider addTarget:self action:@selector(showPopupUI) forControlEvents:UIControlEventValueChanged];
+    [self.scrubberSlider addTarget:self action:@selector(hidePopupUI) forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchUpOutside | UIControlEventTouchCancel];
+    
 
     self.filmStripView.layer.shadowOffset = CGSizeMake(0, 2);
     self.filmStripView.layer.shadowColor = [UIColor darkGrayColor].CGColor;
@@ -188,6 +189,7 @@
 }
 
 - (IBAction)toggleControls:(id)sender {
+    NSLog(@">>>>control toggled fired");
     [UIView animateWithDuration:0.35 animations:^{
         if (!self.controlsHidden) {
             if (!self.filmstripHidden) {
@@ -266,17 +268,33 @@
         self.infoView.hidden = YES;
     }];
     self.scrubbing = NO;
+    [self resetTimer];
     [self.delegate scrubbingDidEnd];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
     [self resetTimer];
-    return ![self.excludedViews containsObject:touch.view] && ![self.excludedViews containsObject:touch.view.superview];
+    BOOL shouldReceiveTouch = ![self isExcludedView:touch.view];
+    NSLog(@"touch View: %@, guestureShouldHandle: %@",touch.view,@(shouldReceiveTouch));
+    return shouldReceiveTouch;
+}
+
+- (BOOL)isExcludedView:(UIView*)view
+{
+    BOOL excluded = NO;
+    for (UIView* excludedView in self.excludedViews) {
+        if ([view isDescendantOfView:excludedView]) {
+            excluded = YES;
+            break;
+        }
+    }
+    return excluded;
 }
 
 - (void)setCurrentTime:(NSTimeInterval)currentTime {
     [self.delegate jumpedToTime:currentTime];
 }
+
 
 - (void)playbackComplete {
     self.scrubberSlider.value = 0.0f;
@@ -284,10 +302,15 @@
 }
 
 - (void)resetTimer {
+    //always disable the timer
     [self.timer invalidate];
     if (!self.scrubbing) {
+        //if scrubbing, don't make a hidden.
         self.timer = [NSTimer scheduledTimerWithTimeInterval:5.0 firing:^{
+            NSLog(@"delayed control toggle fired!");
             if (self.timer.isValid && !self.controlsHidden) {
+                //toggle control, only if timer still valid and control are displayed
+                NSLog(@"control hidden!");
                 [self toggleControls:nil];
             }
         }];

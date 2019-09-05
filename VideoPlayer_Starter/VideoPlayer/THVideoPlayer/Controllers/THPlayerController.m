@@ -43,15 +43,21 @@ static const NSString *PlayerItemStatusContext;
 
 
 @interface THPlayerController () <THTransportDelegate>
+{
+    id _timeObserverToken;
+}
 
 @property (strong, nonatomic) THPlayerView *playerView;
 
 // Listing 4.4
 @property (nonatomic,strong) AVAsset*             asset;
-@property (nonatomic,strong) AVPlayerItem*      playerItem;
+@property (nonatomic,strong) AVPlayerItem*        playerItem;
 @property (nonatomic,strong) AVPlayer*            player;
-
 @property (nonatomic,assign) BOOL                 playState;
+
+@property (nonatomic,assign,getter=isScrubbing) BOOL scrubbing;
+@property (nonatomic,assign) CGFloat lastPlaybackRate;
+@property (nonatomic,assign) NSTimeInterval scubbingTime;
 
 @end
 
@@ -65,6 +71,7 @@ static const NSString *PlayerItemStatusContext;
         
         // Listing 4.6
         _playState = YES;
+        _scrubbing = NO;
         
         _asset = [AVAsset assetWithURL:assetURL];
         _playerItem = [[AVPlayerItem alloc]initWithAsset:_asset automaticallyLoadedAssetKeys:@[@"commonMetadata",@"duration"]];
@@ -77,11 +84,17 @@ static const NSString *PlayerItemStatusContext;
 }
 
 - (void)prepareToPlay {
-
+    
     // Listing 4.6
     [_playerItem addObserver:self forKeyPath:STATUS_KEYPATH options: NSKeyValueObservingOptionNew context:&PlayerItemStatusContext];
     [self addPlayerItemTimeObserver];
     [self addItemEndObserverForPlayerItem];
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:_playerView];
+    [_player removeTimeObserver:_timeObserverToken];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -108,85 +121,95 @@ static const NSString *PlayerItemStatusContext;
 #pragma mark - Time Observers
 
 - (void)addPlayerItemTimeObserver {
-
+    
     // Listing 4.8
     typeof(self) __weak wSelf = self;
-    [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-        [wSelf.playerView.transport setCurrentTime:CMTimeGetSeconds(wSelf.player.currentTime) duration:CMTimeGetSeconds(wSelf.playerItem.duration)];
+    _timeObserverToken = [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
+        if (!wSelf.isScrubbing) {
+            [wSelf.playerView.transport setCurrentTime:CMTimeGetSeconds(wSelf.player.currentTime) duration:CMTimeGetSeconds(wSelf.playerItem.duration)];
+        }
     }];
 }
 
 - (void)addItemEndObserverForPlayerItem {
-
-    // Listing 4.9
     
+    // Listing 4.9
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackComplete) name:AVPlayerItemDidPlayToEndTimeNotification object:_playerItem];
 }
 
+- (void)playbackComplete
+{
+    [self stop];
+    [_playerView.transport playbackComplete];
+}
 #pragma mark - THTransportDelegate Methods
 
 - (void)play {
-
+    
     // Listing 4.10
     [_player play];
     _playState = YES;
 }
 
 - (void)pause {
-
     // Listing 4.10
     [_player pause];
     _playState = NO;
 }
 
 - (void)stop {
-
+    
     // Listing 4.10
     _player.rate = 0;
-    [_player seekToTime:kCMTimeZero];
     _playState = NO;
+    [_player seekToTime:kCMTimeZero];
 }
 
 - (void)jumpedToTime:(NSTimeInterval)time {
-
-    // Listing 4.10
     
+    // Listing 4.10
+    [_player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 - (void)scrubbingDidStart {
-
+    
     // Listing 4.11
+    _scrubbing = YES;
 }
 
 - (void)scrubbedToTime:(NSTimeInterval)time {
-
-    // Listing 4.11
     
+    // Listing 4.11
+    _scubbingTime = time;
+    [_playerView.transport setCurrentTime:time duration:CMTimeGetSeconds(_playerItem.duration)];
 }
 
 - (void)scrubbingDidEnd {
-
-    // Listing 4.11
     
+    // Listing 4.11
+    NSLog(@">>>>>>>>>>>scrubbing end");
+    [self jumpedToTime:_scubbingTime];
+    _scrubbing = NO;
 }
 
 
 #pragma mark - Thumbnail Generation
 
 - (void)generateThumbnails {
-
+    
     // Listing 4.14
-
+    
 }
 
 
 - (void)loadMediaOptions {
-
+    
     // Listing 4.16
     
 }
 
 - (void)subtitleSelected:(NSString *)subtitle {
-
+    
     // Listing 4.17
     
 }
