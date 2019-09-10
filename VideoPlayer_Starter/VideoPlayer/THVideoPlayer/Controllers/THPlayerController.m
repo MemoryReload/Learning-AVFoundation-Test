@@ -30,6 +30,7 @@
 #import "THPlayerView.h"
 #import "AVAsset+THAdditions.h"
 #import "UIAlertView+THAdditions.h"
+#import "THThumbnail.h"
 #import "THNotifications.h"
 
 // AVPlayerItem's status property
@@ -48,16 +49,15 @@ static const NSString *PlayerItemStatusContext;
 }
 
 @property (strong, nonatomic) THPlayerView *playerView;
+@property (strong, nonatomic) id<THTransport> transport;
 
 // Listing 4.4
 @property (nonatomic,strong) AVAsset*             asset;
 @property (nonatomic,strong) AVPlayerItem*        playerItem;
 @property (nonatomic,strong) AVPlayer*            player;
-@property (nonatomic,assign) BOOL                 playState;
 
-@property (nonatomic,assign,getter=isScrubbing) BOOL scrubbing;
 @property (nonatomic,assign) CGFloat lastPlaybackRate;
-@property (nonatomic,assign) NSTimeInterval scubbingTime;
+@property (nonatomic,strong) AVAssetImageGenerator* imageGenerator;
 
 @end
 
@@ -70,14 +70,8 @@ static const NSString *PlayerItemStatusContext;
     if (self) {
         
         // Listing 4.6
-        _playState = YES;
-        _scrubbing = NO;
         
         _asset = [AVAsset assetWithURL:assetURL];
-        _playerItem = [[AVPlayerItem alloc]initWithAsset:_asset automaticallyLoadedAssetKeys:@[@"commonMetadata",@"duration"]];
-        _player = [[AVPlayer alloc]initWithPlayerItem:_playerItem];
-        _playerView = [[THPlayerView alloc]initWithPlayer:_player];
-        _playerView.transport.delegate = self;
         [self prepareToPlay];
     }
     return self;
@@ -86,9 +80,15 @@ static const NSString *PlayerItemStatusContext;
 - (void)prepareToPlay {
     
     // Listing 4.6
+    NSArray* keys = @[@"tracks",@"commonMetadata",@"duration"];
+    _playerItem = [[AVPlayerItem alloc]initWithAsset:_asset automaticallyLoadedAssetKeys:keys];
     [_playerItem addObserver:self forKeyPath:STATUS_KEYPATH options: NSKeyValueObservingOptionNew context:&PlayerItemStatusContext];
-    [self addPlayerItemTimeObserver];
-    [self addItemEndObserverForPlayerItem];
+    
+    _player = [[AVPlayer alloc]initWithPlayerItem:_playerItem];
+    
+    _playerView = [[THPlayerView alloc]initWithPlayer:_player];
+    _transport = _playerView.transport;
+    _transport.delegate = self;
 }
 
 -(void)dealloc
@@ -104,17 +104,23 @@ static const NSString *PlayerItemStatusContext;
     
     // Listing 4.7
     if (context == &PlayerItemStatusContext) {
-        [_playerItem removeObserver:self forKeyPath:STATUS_KEYPATH context:&PlayerItemStatusContext];
-        AVPlayerItemStatus status = [change[NSKeyValueChangeNewKey] integerValue];
-        if (status == AVPlayerItemStatusReadyToPlay) {
-            if (_playState) {
-                [_playerView.transport setTitle:_asset.title];
-                [_playerView.transport setCurrentTime:CMTimeGetSeconds(_player.currentTime) duration:CMTimeGetSeconds(_playerItem.duration)];
-                [_player play];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.playerItem removeObserver:self forKeyPath:STATUS_KEYPATH context:&PlayerItemStatusContext];
+            AVPlayerItemStatus status = [change[NSKeyValueChangeNewKey] integerValue];
+            if (status == AVPlayerItemStatusReadyToPlay) {
+                [self addPlayerItemTimeObserver];
+                [self addItemEndObserverForPlayerItem];
+                
+                [self.transport setTitle:self.asset.title];
+                [self.transport setCurrentTime:CMTimeGetSeconds(self.player.currentTime) duration:CMTimeGetSeconds(self.playerItem.duration)];
+                [self.player play];
+                
+                //create thumnails
+                [self generateThumbnails];
+            }else{
+                NSLog(@"AVPlayerItem: play failed!");
             }
-        }else{
-            NSLog(@"AVPlayerItem: play failed!");
-        }
+        });
     }
 }
 
@@ -125,9 +131,7 @@ static const NSString *PlayerItemStatusContext;
     // Listing 4.8
     typeof(self) __weak wSelf = self;
     _timeObserverToken = [_player addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(1, NSEC_PER_SEC) queue:dispatch_get_main_queue() usingBlock:^(CMTime time) {
-        if (!wSelf.isScrubbing) {
-            [wSelf.playerView.transport setCurrentTime:CMTimeGetSeconds(wSelf.player.currentTime) duration:CMTimeGetSeconds(wSelf.playerItem.duration)];
-        }
+        [wSelf.transport setCurrentTime:CMTimeGetSeconds(wSelf.player.currentTime) duration:CMTimeGetSeconds(wSelf.playerItem.duration)];
     }];
 }
 
@@ -139,8 +143,10 @@ static const NSString *PlayerItemStatusContext;
 
 - (void)playbackComplete
 {
-    [self stop];
-    [_playerView.transport playbackComplete];
+    typeof(self) __weak wSelf = self;
+    [_player seekToTime:kCMTimeZero completionHandler:^(BOOL finished) {
+        [wSelf.transport playbackComplete];
+    }];
 }
 #pragma mark - THTransportDelegate Methods
 
@@ -148,21 +154,19 @@ static const NSString *PlayerItemStatusContext;
     
     // Listing 4.10
     [_player play];
-    _playState = YES;
 }
 
 - (void)pause {
     // Listing 4.10
+    _lastPlaybackRate = self.player.rate;
     [_player pause];
-    _playState = NO;
 }
 
 - (void)stop {
     
     // Listing 4.10
     _player.rate = 0;
-    _playState = NO;
-    [_player seekToTime:kCMTimeZero];
+    [_transport playbackComplete];
 }
 
 - (void)jumpedToTime:(NSTimeInterval)time {
@@ -174,22 +178,26 @@ static const NSString *PlayerItemStatusContext;
 - (void)scrubbingDidStart {
     
     // Listing 4.11
-    _scrubbing = YES;
+    _lastPlaybackRate = _player.rate;
+    [_player pause];
+    [_player removeTimeObserver:_timeObserverToken];
 }
 
 - (void)scrubbedToTime:(NSTimeInterval)time {
     
     // Listing 4.11
-    _scubbingTime = time;
-    [_playerView.transport setCurrentTime:time duration:CMTimeGetSeconds(_playerItem.duration)];
+    [_playerItem cancelPendingSeeks];
+    [_player seekToTime:CMTimeMakeWithSeconds(time, NSEC_PER_SEC) toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
 }
 
 - (void)scrubbingDidEnd {
     
     // Listing 4.11
+    [self addPlayerItemTimeObserver];
+    if (_lastPlaybackRate >0) {
+        [_player play];
+    }
     NSLog(@">>>>>>>>>>>scrubbing end");
-    [self jumpedToTime:_scubbingTime];
-    _scrubbing = NO;
 }
 
 

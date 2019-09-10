@@ -32,9 +32,9 @@
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIButton *filmstripToggleButton;
 @property (weak, nonatomic) IBOutlet UIButton *togglePlaybackButton;
-@property (weak, nonatomic) IBOutlet UILabel *currentTimeLabel;
-@property (weak, nonatomic) IBOutlet UILabel *remainingTimeLabel;
-@property (weak, nonatomic) IBOutlet UISlider *scrubberSlider;
+@property (weak, nonatomic) IBOutlet UILabel *currentTimeLabel;//当前时间
+@property (weak, nonatomic) IBOutlet UILabel *remainingTimeLabel;//剩余时间
+@property (weak, nonatomic) IBOutlet UISlider *scrubberSlider;//拖动到的时间
 @property (weak, nonatomic) IBOutlet UIView *infoView;
 @property (weak, nonatomic) IBOutlet UILabel *scrubbingTimeLabel;
 
