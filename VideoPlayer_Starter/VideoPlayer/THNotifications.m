@@ -24,3 +24,6 @@
 //
 
 NSString * const THThumbnailsGeneratedNotification = @"THThumbnailsGeneratedNotification";
+
+NSString * const ThumbnailsGeneratedNotificationThumbnailsKey = @"kThumbnailsGeneratedNotificationThumbnails";
+NSString * const ThumbnailsGeneratedNotificationObjectKey = @"kThumbnailsGeneratedNotificationObject";

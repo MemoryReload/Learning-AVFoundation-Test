@@ -206,7 +206,48 @@ static const NSString *PlayerItemStatusContext;
 - (void)generateThumbnails {
     
     // Listing 4.14
+    _imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:_asset];
+    _imageGenerator.maximumSize = CGSizeMake(200, 0);
+//    //This makes accurate image generation, but may incur decoding problem.
+//    _imageGenerator.requestedTimeToleranceBefore = _imageGenerator.requestedTimeToleranceAfter = kCMTimeZero;
     
+    CMTime duration = _asset.duration;
+    NSMutableArray* times = [[NSMutableArray alloc]init];
+//    CMTimeValue increment = duration.value / 20; // one 20th of duration
+    CMTimeValue increment = duration.timescale*5;//every 5 seconds
+    
+    for (CMTimeValue currentTime = kCMTimeZero.value; currentTime <= duration.value ; currentTime += increment) {
+        CMTime time = CMTimeMake(currentTime, duration.timescale);
+        [times addObject:[NSValue valueWithCMTime:time]];
+    }
+    
+    NSMutableArray* thumnails = [[NSMutableArray alloc]initWithCapacity:times.count];
+    __block NSInteger counts = times.count;
+    
+    __weak typeof(self)wSelf = self;
+    [_imageGenerator generateCGImagesAsynchronouslyForTimes:times completionHandler:^(CMTime requestedTime, CGImageRef  _Nullable image, CMTime actualTime, AVAssetImageGeneratorResult result, NSError * _Nullable error) {
+        UIImage* img;
+        if (AVAssetImageGeneratorSucceeded == result) {
+            img = [UIImage imageWithCGImage:image scale:2 orientation:UIImageOrientationUp];
+            NSLog(@"generate image succeeded for requested time: %@, actual time: %@",[NSValue valueWithCMTime:requestedTime],[NSValue valueWithCMTime:actualTime]);
+        }else{
+            img = [[UIImage alloc]init];
+        }
+        if (error) {
+            NSLog(@"generate image failed for time: %@", [NSValue valueWithCMTime:actualTime]);
+        }
+        
+        THThumbnail* thumnail = [THThumbnail thumbnailWithImage:img time:actualTime];
+        [thumnails addObject:thumnail];
+        counts--;
+        
+        if (0 == counts) {
+            typeof(self) sSelf =wSelf;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:THThumbnailsGeneratedNotification object:sSelf userInfo:@{ThumbnailsGeneratedNotificationThumbnailsKey:thumnails,ThumbnailsGeneratedNotificationObjectKey:sSelf}];
+            });
+        }
+    }];
 }
 
 

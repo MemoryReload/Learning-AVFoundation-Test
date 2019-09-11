@@ -24,3 +24,6 @@
 //
 
 extern NSString * const THThumbnailsGeneratedNotification;
+
+extern NSString * const ThumbnailsGeneratedNotificationThumbnailsKey;
+extern NSString * const ThumbnailsGeneratedNotificationObjectKey;

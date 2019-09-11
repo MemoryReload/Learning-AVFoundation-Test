@@ -52,13 +52,15 @@
 
 - (void)buildScrubber:(NSNotification *)notification {
 
-    self.thumbnails = [notification object];
+    self.thumbnails = notification.userInfo[ThumbnailsGeneratedNotificationThumbnailsKey];
 
     CGFloat currentX = 0.0f;
 
-    CGSize size = [(UIImage *)[[self.thumbnails firstObject] image] size];
-    // Scale retina image down to appropriate size
-    CGSize imageSize = CGSizeApplyAffineTransform(size, CGAffineTransformMakeScale(0.5, 0.5));
+//    CGSize size = [(UIImage *)[[self.thumbnails firstObject] image] size];
+//    // Scale retina image down to appropriate size
+//    CGSize imageSize = CGSizeApplyAffineTransform(size, CGAffineTransformMakeScale(0.5, 0.5));
+    
+    CGSize imageSize = [(UIImage *)[[self.thumbnails firstObject] image] size];
     CGRect imageRect = CGRectMake(currentX, 0, imageSize.width, imageSize.height);
 
     CGFloat imageWidth = CGRectGetWidth(imageRect) * self.thumbnails.count;
