@@ -40,6 +40,10 @@
     [self.view addSubview:playerView];
 }
 
+/*
+ May be removed.
+ Cuz,For apps linked against iOS 8 or later, this method returns YES if the view controller is in a vertically compact environment.
+ */
 - (BOOL)prefersStatusBarHidden {
     return YES;
 }
