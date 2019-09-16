@@ -80,7 +80,7 @@ static const NSString *PlayerItemStatusContext;
 - (void)prepareToPlay {
     
     // Listing 4.6
-    NSArray* keys = @[@"tracks",@"commonMetadata",@"duration"];
+    NSArray* keys = @[@"tracks",@"commonMetadata",@"duration",@"availableMediaCharacteristicsWithMediaSelectionOptions"];
     _playerItem = [[AVPlayerItem alloc]initWithAsset:_asset automaticallyLoadedAssetKeys:keys];
     [_playerItem addObserver:self forKeyPath:STATUS_KEYPATH options: NSKeyValueObservingOptionNew context:&PlayerItemStatusContext];
     
@@ -117,6 +117,8 @@ static const NSString *PlayerItemStatusContext;
                 
                 //create thumnails
                 [self generateThumbnails];
+                //subtitles
+                [self loadMediaOptions];
             }else{
                 NSLog(@"AVPlayerItem: play failed!");
             }
@@ -254,13 +256,51 @@ static const NSString *PlayerItemStatusContext;
 - (void)loadMediaOptions {
     
     // Listing 4.16
+    NSArray* characters = _asset.availableMediaCharacteristicsWithMediaSelectionOptions;
     
+    //test code
+    NSLog(@"------------------");
+    for (AVMediaCharacteristic character in characters) {
+        AVMediaSelectionGroup* group = [_asset mediaSelectionGroupForMediaCharacteristic:character];
+        NSLog(@"%@: isSupportAutoSelection %@, slectedOption %@",character,@([_playerItem.currentMediaSelection mediaSelectionCriteriaCanBeAppliedAutomaticallyToMediaSelectionGroup:group]),[_playerItem.currentMediaSelection selectedMediaOptionInMediaSelectionGroup:group].displayName);
+        for (AVMediaSelectionOption* option in group.options) {
+            NSLog(@"\t%@",option.displayName);
+        }
+        NSLog(@"------------------");
+    }
+    
+    if ([characters indexOfObject:AVMediaCharacteristicLegible] != NSNotFound) {
+        AVMediaSelectionGroup* legibleGroup = [_asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+        NSMutableArray* subtitles = [[NSMutableArray alloc] initWithCapacity:legibleGroup.options.count];
+        for (AVMediaSelectionOption* option in legibleGroup.options) {
+            [subtitles addObject:option.displayName];
+        }
+        [_transport setSubtitles:subtitles];
+    }
 }
 
 - (void)subtitleSelected:(NSString *)subtitle {
     
     // Listing 4.17
+    AVMediaSelectionGroup* legibleGroup = [_asset mediaSelectionGroupForMediaCharacteristic:AVMediaCharacteristicLegible];
+    if (!legibleGroup) return;
     
+    AVMediaSelectionOption* option;
+    if (![subtitle isEqualToString:@"None"]) {
+        for (AVMediaSelectionOption* tempOption in legibleGroup.options) {
+            if ([tempOption.displayName isEqualToString:subtitle]) {
+                option = tempOption;
+                break;
+            }
+        }
+    }
+    [_playerItem selectMediaOption:option inMediaSelectionGroup:legibleGroup];
+    
+    //test code
+    for (AVMediaCharacteristic character in  _asset.availableMediaCharacteristicsWithMediaSelectionOptions) {
+        AVMediaSelectionGroup* group = [_asset mediaSelectionGroupForMediaCharacteristic:character];
+        NSLog(@"%@: isSupportAutoSelection %@, slectedOption %@",character,@([_playerItem.currentMediaSelection mediaSelectionCriteriaCanBeAppliedAutomaticallyToMediaSelectionGroup:group]),[_playerItem.currentMediaSelection selectedMediaOptionInMediaSelectionGroup:group].displayName);
+    }
 }
 
 
