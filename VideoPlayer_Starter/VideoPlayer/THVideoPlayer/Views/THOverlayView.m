@@ -90,6 +90,7 @@
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:self.volumeView];
     [items addObject:item];
     self.toolbar.items = items;
+    NSLog(@"wirelessRoutesAvailable: %@, isWirelessRouteActive: %@",@(self.volumeView.wirelessRoutesAvailable),@(self.volumeView.isWirelessRouteActive));
 #endif
 }
 

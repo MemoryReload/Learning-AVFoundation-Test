@@ -15,6 +15,6 @@
 	#import <Foundation/Foundation.h>
 
 #define ENABLE_SUBTITLES 1
-#define ENABLE_AIRPLAY 0
+#define ENABLE_AIRPLAY 1
 
 #endif
